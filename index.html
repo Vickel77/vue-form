@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>User LOG</title>
+	<style>
+		body {background:rgb(0, 119, 89);}
+		.wrap {background: rgb(19, 19, 19);
+			width:40%;
+			position: absolute; left: 50%; transform: translateX(-50%); text-align: center;
+			padding: 10px;
+			 margin-top:70px;
+			 border-radius:10px;
+			 color:rgb(0, 216, 162);
+			 box-shadow:1px 5px 1px rgb(20, 20, 20);
+			font-family:'century gothic'; font-weight: 500;}
+		.wrap::before {content:''; position:absolute; top:0; left:0; display:block; 
+			border-radius:10px 0 0 10px;
+			height:100%; width:50%; background: #212121; z-index: -1111;}
+		h1 {font-family: dotum;
+			text-shadow:0px 2px 2px #000;
+			}
+		.error-message {
+			font-size:.8em;
+			color: #d40000;
+		}
+		.error-list {
+			margin: 0; padding: 0;
+			font-size:.8em;
+			color: #990000;
+			list-style-type: none;
+		}
+		.user-input {
+			background:none;
+			border: none;
+			outline: none;
+			color: antiquewhite;
+			width: 70%;
+			padding:10px;
+			margin:2px;
+			border-bottom: 1.5px solid rgba(0, 119, 89,.3);
+
+		}
+		.user-input:focus {border-bottom: 1.5px solid rgb(0, 119, 89); transition: .3s;}
+		input[type="submit"] {
+			background:none;
+			border: none; outline: none;
+			padding: 10px; margin:10px;
+			color: antiquewhite;
+			box-shadow:2px 2px 3px rgb(8, 8, 8), -2px -2px 3px rgb(37, 37, 37);
+		}
+		input[type="submit"]:active {box-shadow:inset 1px 1px 2px rgb(8, 8, 8), inset -2px -2px 2px rgb(37, 37, 37);}
+		input[type="checkbox"] {
+			padding:5px;
+			background:#d40000;
+			color: aqua;
+		}
+		.staff-list {
+			margin-top: 10px;
+			list-style: none;
+		}
+		.email {color: rgb(0, 119, 89);}
+		button {
+			background:none;
+			border: none; outline: none;
+			margin-left: 5px;
+			color: #d40000;
+			box-shadow:1px 1px 2px rgb(8, 8, 8), -2px -2px 2px rgb(37, 37, 37);
+		}
+		button:active {box-shadow:inset 1px 1px 2px rgb(8, 8, 8), inset -2px -2px 2px rgb(37, 37, 37);}
+		.contacted {opacity: .5;}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div id="apple">
+			<h1>{{title}}</h1>
+			<p class="error-message" v-if="errors.length">
+				<b>Please correct the following errors(s):</b>
+				<ul class="error-list">
+					<li v-for="error in errors">{{ error }}</li>
+				</ul>
+			</p>
+			<form action="" v-on:submit="addUser" >
+				<input class="user-input" type="text" v-model="newStaff.name" placeholder="Name"> <br>
+				<input class="user-input" type="email" v-model="newStaff.email" placeholder="Email"> <br>
+				<input type="submit" value="submit">
+			</form>
+			<ul>
+				<li class="staff-list" v-for="staff in staffs">
+					<input type="checkbox" name="contacted" v-model="staff.contacted">
+					<span :class="{contacted: staff.contacted}">
+						{{staff.name}}: <span class="email"> {{staff.email}} </span><button v-on:click="deleteUser(staff)">X</button>
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script type="text/javascript">
+		var newApp = new Vue({
+			el: '#apple',
+			data: {
+				title: 'USERS',
+				newStaff: {},
+				staffs: [
+					{name: 'Mark Mclarry',
+					email: 'Markmywords@gmail.com',
+					contacted: false
+					},
+					{name: 'Stephanie Okereke',
+					email: 'stephok@gmail.com',
+					contacted: false
+					},
+					{name: 'Marcus Miller',
+					email: 'Mmiller@gmail.com',
+					contacted: false
+					}
+				],
+				errors:[]
+			},
+			methods: {
+				addUser: function(e){
+					console.log('New staff');
+					this.staffs.push({
+						name:this.newStaff.name,
+						email:this.newStaff.email,
+						contacted:false
+					});
+				
+					this.errors = [];
+					if (!this.newStaff.name) {
+						this.errors.push('Name required');
+					}
+					if (!this.newStaff.email){
+						this.errors.push('Email required');
+					}
+					e.preventDefault();
+				},
+				deleteUser: function (staff) {
+					this.staffs.splice(this.staffs.indexOf(staff), 1);
+				}
+			}
+
+		})
+	</script>
+
+
+</body>
+</html>
